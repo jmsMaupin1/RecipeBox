@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>{{data.name}}</h2>
+{% if data %}
+
+<div>
+    <strong>{{ data.bio }}</strong></br></br>
+    <ul><li>{% for it in recipe %}
+    <a href="/detail/{{it.id}}">{{ it.title }} </a>
+    {% endfor %}</li></ul>
+    
+   
+</div>
+
+
+{% else %}
+<h3>oops</h3>
+{% endif %}
+
+{% endblock %}

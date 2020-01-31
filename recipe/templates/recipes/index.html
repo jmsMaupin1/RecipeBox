@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Recipes</h2>
+    {% if data %}
+    <ul>
+        
+        {% for i in data%}
+            <li>
+               <a href="detail/{{i.id}}"> {{ i.title}}</a>
+                
+            </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <h3>oops</h3>
+    {% endif %}
+{% endblock %}
