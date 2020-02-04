@@ -18,12 +18,15 @@ from django.urls import path
 from recipe.models import Recipes, Author
 from recipe import views
 
+
 admin.site.register(Recipes)
 admin.site.register(Author)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index),
+    path('', views.index, name="main"),
     path('detail/<int:id>', views.detail),
-    path('author/<int:id>', views.author)
+    path('author/<int:id>', views.author),
+    path('addRecipe/', views.recipe_add),
+    path('addAuthor/', views.author_add)
 ]
