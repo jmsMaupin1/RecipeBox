@@ -1,5 +1,5 @@
-
 {% load crispy_forms_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,11 +10,18 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
-<body>
-    <div class="container">
+<body style="background-color: black;">
+    <div class="container" style="background-color: lightgray;">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <ul class="navbar-nav">
+    <li class="nav-item active">
+      <a class="nav-link" href="/">Home</a>
+    </li>
+  </ul>
+</nav>
         <div class="row">
             <div class="col-sm-4 offset-4">
-                <h1 class=" offset-3">Enter Recipe</h1>
+                <h1 class=" offset-2">Enter Recipe</h1>
                 <form action="" method= "post">
                     {% csrf_token %}
                     {{ form|crispy }}
