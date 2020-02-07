@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from recipe.models import Recipes, Author
-from recipe import views
+from . import views
 
 
 admin.site.register(Recipes)
@@ -28,5 +28,11 @@ urlpatterns = [
     path('detail/<int:id>', views.detail),
     path('author/<int:id>', views.author),
     path('addRecipe/', views.recipe_add),
-    path('addAuthor/', views.author_add)
+    path('addAuthor/', views.author_add),
+    path('login/', views.loginPage, name="login"),
+    path('logout/', views.logoutUser, name="logout"),
+    path('register/', views.registerPage, name="register"),
+    path('dnu/', views.dnuse, name="dnu")
+
+
 ]

@@ -5,13 +5,17 @@
 <h2>{{data.name}}</h2>
 {% if data %}
 
-<div >
+<div>
     <strong>{{ data.bio }}</strong></br></br>
-    <ul><li>{% for it in recipe %}
-    <li><a href="/detail/{{it.id}}">{{ it.title }} </a></li>
-    {% endfor %}</li></ul>
-    
-   
+    <ul>
+        <li>
+            {% for it in recipe %}
+        </li>
+        <a href="/detail/{{it.id}}">{{ it.title }} </a>
+        <li>
+            {% endfor %}
+        </li>
+    </ul>
 </div>
 
 

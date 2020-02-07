@@ -4,17 +4,16 @@
 
 <h2>{{data.title}}</h2>
     {% if data %}
-    <ul>
-  <div>
-    <h3>by <a href='/author/{{data.author.id}}'>{{data.author.name}}</a></h3> </br></br>
-    
-    <strong>{{ data.description }}</strong></br></br>
-    {{ data.timeRequired }}</br></br>
-    <li>{{ data.ingredients }}</li></br></br>
-    <li>{{ data.instructions }}</li>
-</div>
+<ul>
+    <div>
+        <h3>by <a href='/author/{{data.author.id}}'>{{data.author.name}}</a></h3> </br></br>
+        <strong>{{ data.description }}</strong></br></br>
+        {{ data.timeRequired }}</br></br>
+        <li>{{ data.ingredients }}</li></br></br>
+        <li>{{ data.instructions }}</li>
+    </div>
         
-    </ul>
+</ul>
     {% else %}
         <h3>oops</h3>
     {% endif %}

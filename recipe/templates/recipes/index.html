@@ -1,23 +1,26 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<container id= "stuff">
-<h2>Recipes</h2>
-    {% if data %}
-    <ul>
-        
-        {% for i in data%}
-            <li>
-               <a href="detail/{{i.id}}" id="link1"> {{ i.title}}</a>
-                
-            </li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-   
 
-    <a href="addRecipe/">Add your own recipe!</a>
-    <br/>
-    <a href="addAuthor/">Become an author!</a>
-{% endblock %}
-</container>
+<body>
+    {% block content %}
+    <container id="stuff" >
+        <h2>Recipes</h2>
+        {% if data %}
+        <ul>
+
+            {% for i in data%}
+            <li>
+                <a href="detail/{{i.id}}" id="link1"> {{ i.title}}</a>
+
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+
+        <a href="addRecipe/">Add your own recipe!</a>
+        <br />
+        <a href="addAuthor/">Become an author!</a>
+        {% endblock %}
+    </container>
+</body>

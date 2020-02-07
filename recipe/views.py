@@ -1,18 +1,61 @@
-from django.shortcuts import render, reverse, HttpResponseRedirect
+# from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages
+from django.shortcuts import render, reverse, HttpResponseRedirect, redirect
 from recipe.models import Recipes, Author
 from recipe.forms import addRecipe, addAuthor
+from .forms import CreateUserForm
+from django.contrib.auth.decorators import login_required
+from .decorators import unauth_user, allowed_users
+from django.contrib.auth.decorators import permission_required
+
+@unauth_user
+def registerPage(request):
+    form = CreateUserForm()
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            user = form.cleaned_data.get('username')
+            messages.success(request, "Account created for " + user)
+            return redirect('login')
+
+    context = {'form': form}
+    return render(request, 'recipes/register.html', context)
 
 
+@unauth_user
+def loginPage(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("main")
+        else:
+            messages.info(request, 'Username or password is incorrect.')
+    return render(request, 'recipes/login.html')
+
+
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
+
+
+@login_required(login_url='login')
 def index(request):
     item = Recipes.objects.all()
     return render(request, 'recipes/index.html', {'data': item})
 
 
+@login_required(login_url='login')
 def detail(request, id):
     item = Recipes.objects.get(id=id)
     return render(request, 'recipes/detail.html', {'data': item})
 
 
+@login_required(login_url='login')
 def author(request, id):
     item = Author.objects.get(id=id)
     recipe = Recipes.objects.filter(author=item)
@@ -20,6 +63,7 @@ def author(request, id):
         request, 'recipes/author.html', {'data': item, 'recipe': recipe})
 
 
+@login_required(login_url='login')
 def recipe_add(request):
     html = 'addRecipe.html'
 
@@ -42,6 +86,8 @@ def recipe_add(request):
     return render(request, html, {'form': form})
 
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'author'])
 def author_add(request):
     html = 'addAuthor.html'
 
@@ -60,3 +106,22 @@ def author_add(request):
     form = addAuthor()
 
     return render(request, html, {'form': form})
+
+
+# def register(response):
+#     if response.method == "POST":
+#         form = UserCreationForm(response.POST)
+#         if form.is_valid():
+#             form.save()
+
+#     form = UserCreationForm()
+#     return render(response, "register/register.html", {"form": form})
+
+
+def dnuse(request):
+    context = {}
+    template = "dnu.html"
+    return render(request, template, context)
+
+
+
