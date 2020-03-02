@@ -32,7 +32,6 @@ urlpatterns = [
     path('login/', views.loginPage, name="login"),
     path('logout/', views.logoutUser, name="logout"),
     path('register/', views.registerPage, name="register"),
-    path('dnu/', views.dnuse, name="dnu")
-
-
+    path('dnu/', views.dnuse, name="dnu"),
+    path('favorite/<int:recipe_id>', views.add_favorite)
 ]

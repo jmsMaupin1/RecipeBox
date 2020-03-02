@@ -16,6 +16,10 @@ class Recipes(models.Model):
 class Author(models.Model):
     name = models.CharField("Author", max_length=20)
     bio = models.TextField()
+    favorites = models.ManyToManyField(
+        Recipes,
+        related_name='favorites'
+    )
 
     def __str__(self):
         # return "{} - {}".format(self.name, self.bio)

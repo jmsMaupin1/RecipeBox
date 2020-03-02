@@ -18,6 +18,19 @@
     </ul>
 </div>
 
+<div>
+    <h1>Favorites</h1>
+    <ul>
+        {% for favorite in favorites %}
+            <li>
+                <a href="/detail/{{favorite.id}}">
+                    {{favorite}}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
 
 {% else %}
 <h3>oops</h3>

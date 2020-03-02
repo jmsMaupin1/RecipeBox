@@ -17,6 +17,10 @@ def registerPage(request):
         if form.is_valid():
             form.save()
             user = form.cleaned_data.get('username')
+            Author.objects.create(
+                name=user,
+                bio=''
+            )
             messages.success(request, "Account created for " + user)
             return redirect('login')
 
@@ -59,8 +63,14 @@ def detail(request, id):
 def author(request, id):
     item = Author.objects.get(id=id)
     recipe = Recipes.objects.filter(author=item)
+    favorites = item.favorites.all()
     return render(
-        request, 'recipes/author.html', {'data': item, 'recipe': recipe})
+        request, 'recipes/author.html', {
+            'data': item,
+            'recipe': recipe,
+            'favorites': favorites
+        }
+    )
 
 
 @login_required(login_url='login')
@@ -106,6 +116,21 @@ def author_add(request):
     form = addAuthor()
 
     return render(request, html, {'form': form})
+
+
+def add_favorite(request, recipe_id):
+    recipe = None
+    user = None
+    
+    try:
+        recipe = Recipes.objects.get(id=recipe_id)
+        user = Author.objects.get(name=request.user.username)
+        user.favorites.add(recipe)
+        user.save()
+    except Exception as e:
+        print(e)
+    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 # def register(response):
