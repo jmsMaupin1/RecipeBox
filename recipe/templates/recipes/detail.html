@@ -14,6 +14,12 @@
     </div>
         
 </ul>
+
+<div>
+    {% if allow_edit %}
+        <a href="/editrecipe/{{data.id}}">Edit Recipe</a>
+    {% endif %}
+</div>
     {% else %}
         <h3>oops</h3>
     {% endif %}

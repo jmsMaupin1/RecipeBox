@@ -1,6 +1,6 @@
 from django import forms
 from crispy_forms.helper import FormHelper
-from recipe.models import Author
+from recipe.models import Author, Recipes
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -23,3 +23,15 @@ class CreateUserForm(UserCreationForm):
     class meta:
         model = User
         fields = ['username', 'passowrd1', 'password2']
+
+
+class EditRecipe(forms.ModelForm):
+    class Meta:
+        model = Recipes
+        fields = [
+            'title',
+            'description',
+            'timeRequired',
+            'instructions',
+            'ingredients'
+        ]

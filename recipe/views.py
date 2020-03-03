@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.shortcuts import render, reverse, HttpResponseRedirect, redirect
 from recipe.models import Recipes, Author
-from recipe.forms import addRecipe, addAuthor
+from recipe.forms import addRecipe, addAuthor, EditRecipe
 from .forms import CreateUserForm
 from django.contrib.auth.decorators import login_required
 from .decorators import unauth_user, allowed_users
@@ -56,7 +56,14 @@ def index(request):
 @login_required(login_url='login')
 def detail(request, id):
     item = Recipes.objects.get(id=id)
-    return render(request, 'recipes/detail.html', {'data': item})
+    is_superuser = request.user.is_superuser
+    logged_in_author = Author.objects.get(name=request.user.username)
+    allow_edit = is_superuser or logged_in_author.name == item.author.name
+    return render(request, 'recipes/detail.html', {
+            'data': item,
+            'allow_edit': allow_edit
+        }
+    )
 
 
 @login_required(login_url='login')
@@ -131,6 +138,29 @@ def add_favorite(request, recipe_id):
         print(e)
     
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def edit_recipe_view(request, recipe_id):
+    recipe = None
+    form = None
+
+    try:
+        recipe = Recipes.objects.get(id=recipe_id)
+    except Exception as e:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    if request.method == 'POST':
+        form = EditRecipe(request.POST, instance=recipe)
+
+        if form.is_valid():
+            form.save()
+        
+        return HttpResponseRedirect(reverse('main'))
+    
+    else:
+        form = EditRecipe(instance=recipe)
+
+    return render(request, 'generic_form.html', {'form': form})
 
 
 # def register(response):
