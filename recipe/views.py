@@ -9,6 +9,29 @@ from django.contrib.auth.decorators import login_required
 from .decorators import unauth_user, allowed_users
 from django.contrib.auth.decorators import permission_required
 
+
+def allowedToEditHelper(request, recipe):
+    is_superuser = request.user.is_superuser
+
+    try:
+        current_author = Author.objects.get(name=request.user.username)
+    except Exception as e:
+        return False
+
+    return is_superuser or current_author == recipe.author.name
+
+
+def detail(request, id):
+    item = Recipes.objects.get(id=id)
+    is_superuser = request.user.is_superuser
+    logged_in_author = Author.objects.get(name=request.user.username)
+    allow_edit = is_superuser or logged_in_author.name == item.author.name
+    return render(request, 'recipes/detail.html', {
+            'data': item,
+            'allow_edit': allow_edit
+        }
+    )
+
 @unauth_user
 def registerPage(request):
     form = CreateUserForm()
@@ -53,12 +76,10 @@ def index(request):
     return render(request, 'recipes/index.html', {'data': item})
 
 
-@login_required(login_url='login')
+
 def detail(request, id):
     item = Recipes.objects.get(id=id)
-    is_superuser = request.user.is_superuser
-    logged_in_author = Author.objects.get(name=request.user.username)
-    allow_edit = is_superuser or logged_in_author.name == item.author.name
+    allow_edit = allowedToEditHelper(request, item)
     return render(request, 'recipes/detail.html', {
             'data': item,
             'allow_edit': allow_edit
@@ -66,7 +87,7 @@ def detail(request, id):
     )
 
 
-@login_required(login_url='login')
+
 def author(request, id):
     item = Author.objects.get(id=id)
     recipe = Recipes.objects.filter(author=item)
@@ -124,7 +145,6 @@ def author_add(request):
 
     return render(request, html, {'form': form})
 
-
 def add_favorite(request, recipe_id):
     recipe = None
     user = None
@@ -149,6 +169,9 @@ def edit_recipe_view(request, recipe_id):
     except Exception as e:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+    if not allowedToEditHelper(request, recipe):
+        return HttpResponseRedirect(reverse('main'))
+
     if request.method == 'POST':
         form = EditRecipe(request.POST, instance=recipe)
 
@@ -161,16 +184,6 @@ def edit_recipe_view(request, recipe_id):
         form = EditRecipe(instance=recipe)
 
     return render(request, 'generic_form.html', {'form': form})
-
-
-# def register(response):
-#     if response.method == "POST":
-#         form = UserCreationForm(response.POST)
-#         if form.is_valid():
-#             form.save()
-
-#     form = UserCreationForm()
-#     return render(response, "register/register.html", {"form": form})
 
 
 def dnuse(request):
